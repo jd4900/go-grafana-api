@@ -85,3 +85,25 @@ func (c *Client) UpdateOrg(id int64, name string) error {
 func (c *Client) DeleteOrg(id int64) error {
 	return c.request("DELETE", fmt.Sprintf("/api/orgs/%d", id), nil, nil, nil)
 }
+
+// UpdateCurrentOrgPreferences changes the preferences of the currently-selected organization
+// https://grafana.com/docs/grafana/latest/http_api/preferences/#update-current-org-prefs
+func (c *Client) UpdateCurrentOrgPreferences(prefs map[string]interface{}) error {
+	payload, err := json.Marshal(prefs)
+	if err != nil {
+		return err
+	}
+
+	req, err := c.newRequest("PUT", "/api/org/preferences", nil, bytes.NewBuffer(payload))
+	if err != nil {
+		return err
+	}
+
+	response, err := c.Do(req)
+	if err != nil {
+		return err
+	} else if response.StatusCode != 200 {
+		return errors.New(response.Status)
+	}
+	return nil
+}
