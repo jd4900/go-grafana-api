@@ -3,6 +3,7 @@ package gapi
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
